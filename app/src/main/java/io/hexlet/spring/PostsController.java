@@ -1,31 +1,35 @@
 package io.hexlet.spring;
 
 import io.hexlet.spring.model.Post;
-import org.springframework.web.bind.annotation.*;
+import io.hexlet.spring.repository.PostRepository;
+import io.hexlet.spring.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/posts")
 public class PostsController {
-    private final List<Post> posts = new ArrayList<>();
-    private Long lastId = 0L;
+    private final PostRepository postRepository;
+
+    public PostsController(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<Post>> index(@RequestParam(defaultValue = "10") Integer limit) {
-        var result = posts.stream().limit(limit).toList();
-        return ResponseEntity.ok(result);
+        var posts = postRepository.findAll().stream().limit(limit).toList();
+        return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> show(@PathVariable Long id) {
-        var postOptional = posts.stream().filter(p -> p.getId().equals(id)).findFirst();
-        return ResponseEntity.of(postOptional);
+        var post = postRepository.findById(id);
+        return ResponseEntity.of(post);
     }
 
     @PostMapping
@@ -35,9 +39,7 @@ public class PostsController {
             ResponseEntity.badRequest().body("Post should have title and content");
             return null;
         }
-        post.setId(lastId++);
-        post.setCreatedAt(LocalDateTime.now());
-        posts.add(post);
+        postRepository.save(post);
         return ResponseEntity.created(URI.create("/" + post.getId())).body(post);
     }
 
@@ -47,14 +49,12 @@ public class PostsController {
                 data.getContent() == null || data.getContent().isEmpty()) {
             ResponseEntity.badRequest().body("Post should have title and content");
         }
-        Optional<Post> maybePost = posts.stream().filter(p -> p.getId().equals(id)).findFirst();
+        Optional<Post> maybePost = postRepository.findById(id);
         if (maybePost.isPresent()) {
             Post post = maybePost.get();
             post.setTitle(data.getTitle());
             post.setContent(data.getContent());
-            if (data.getAuthor() != null) {
-                post.setAuthor(data.getAuthor());
-            }
+            postRepository.save(post);
             return ResponseEntity.ok(data);
         } else {
             return ResponseEntity.notFound().build();
@@ -63,7 +63,7 @@ public class PostsController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> destroy(@PathVariable Long id) {
-        var removed = posts.removeIf(p -> p.getId().equals(id));
-        return removed ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        postRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

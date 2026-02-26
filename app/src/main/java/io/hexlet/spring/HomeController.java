@@ -1,10 +1,13 @@
 package io.hexlet.spring;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HomeController {
+    @Value("${app.welcome-message}")
+    String welcomeMessage;
 
     @GetMapping("/")
     public String home() {
@@ -14,5 +17,10 @@ public class HomeController {
     @GetMapping("/about")
     public String about() {
         return "This is simple Spring blog.";
+    }
+
+    @GetMapping("/welcome")
+    public String welcome() {
+        return welcomeMessage;
     }
 }
