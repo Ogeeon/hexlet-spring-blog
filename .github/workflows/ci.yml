@@ -18,6 +18,8 @@ jobs:
           java-version: "24"
       - name: Cache Gradle
         uses: gradle/actions/setup-gradle@v3
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
       - name: Build & Test
         run: ./gradlew clean build test
       - name: Coverage report
