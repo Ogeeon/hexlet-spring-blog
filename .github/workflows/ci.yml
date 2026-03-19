@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "24"
+      - name: Cache Gradle
+        uses: gradle/actions/setup-gradle@v3
+      - name: Build & Test
+        run: ./gradlew clean build test
+      - name: Coverage report
+        run: ./gradlew jacocoTestReport
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }}

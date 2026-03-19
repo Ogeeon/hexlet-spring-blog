@@ -27,6 +27,9 @@ public class Post {
     @Size(min = 10, message = "Post is too short")
     private String content;
     private boolean published;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

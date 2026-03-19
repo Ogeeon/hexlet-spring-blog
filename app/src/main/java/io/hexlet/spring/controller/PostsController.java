@@ -47,10 +47,6 @@ public class PostsController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody Post data) {
-        if (data.getTitle() == null ||data.getTitle().isEmpty() ||
-                data.getContent() == null || data.getContent().isEmpty()) {
-            ResponseEntity.badRequest().body("Post should have title and content");
-        }
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post with ID " + id + " no found"));
         post.setTitle(data.getTitle());

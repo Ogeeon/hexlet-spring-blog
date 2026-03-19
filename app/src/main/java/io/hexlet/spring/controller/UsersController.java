@@ -41,13 +41,9 @@ public class UsersController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody User data) {
-        if (data.getName() == null || data.getName().isEmpty() ||
-                data.getEmail() == null || data.getEmail().isEmpty()) {
-            return ResponseEntity.badRequest().body("User should have name and email");
-        }
         var user = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User with ID " + id + " not found"));
-        user.setName(data.getName());
+        user.setFirstName(data.getFirstName());
         user.setEmail(data.getEmail());
         userRepository.save(user);
         return ResponseEntity.ok(user);

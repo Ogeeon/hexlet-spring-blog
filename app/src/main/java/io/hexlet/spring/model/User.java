@@ -22,11 +22,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    private String name;
-    @Column(nullable = false)
+    @NotBlank(message = "User email is required")
     private String email;
-    @Column(nullable = false)
+    @NotBlank(message = "User first name is required")
     private String firstName;
     private String lastName;
     private LocalDate birthday;
