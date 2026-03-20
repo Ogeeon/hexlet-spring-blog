@@ -3,7 +3,7 @@ plugins {
     id("org.springframework.boot") version "3.4.5"
     id("io.spring.dependency-management") version "1.1.3"
     jacoco
-    id("org.sonarqube") version "4.4.1.3373"
+    id("org.sonarqube") version "5.1.0.4882"
 }
 
 group = "io.hexlet"
@@ -28,7 +28,7 @@ dependencies {
     testImplementation("com.h2database:h2")
 }
 
-sonarqube {
+sonar {
     properties {
         property("sonar.projectKey", "Ogeeon_hexlet-spring-blog")
         property("sonar.organization", "ogeeon") // для SonarCloud
