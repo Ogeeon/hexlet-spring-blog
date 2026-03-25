@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class CreateUserDTO {
+public class UserCreateDTO {
     private Long id;
     @NotBlank(message = "User email is required")
     private String email;

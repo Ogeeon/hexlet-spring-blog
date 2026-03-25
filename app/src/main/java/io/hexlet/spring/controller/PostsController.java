@@ -1,6 +1,6 @@
 package io.hexlet.spring.controller;
 
-import io.hexlet.spring.dto.CreatePostDTO;
+import io.hexlet.spring.dto.PostCreateDTO;
 import io.hexlet.spring.dto.PostDTO;
 import io.hexlet.spring.dto.PostMapper;
 import io.hexlet.spring.exception.ResourceNotFoundException;
@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -49,7 +48,7 @@ public class PostsController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDTO> create(@Valid @RequestBody CreatePostDTO dto) {
+    public ResponseEntity<PostDTO> create(@Valid @RequestBody PostCreateDTO dto) {
         var user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User with ID " + dto.getUserId() + " not found"));
         var post = new Post();
@@ -63,7 +62,7 @@ public class PostsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> update(@PathVariable Long id, @RequestBody CreatePostDTO dto) {
+    public ResponseEntity<PostDTO> update(@PathVariable Long id, @RequestBody PostCreateDTO dto) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post with ID " + id + " no found"));
         post.setTitle(dto.getTitle());

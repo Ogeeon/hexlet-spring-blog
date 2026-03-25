@@ -7,8 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreatePostDTO {
+public class PostCreateDTO {
     @NotBlank(message = "Post title is required")
+    @Size(min = 3, max = 100)
     private String title;
     @Size(min = 10, message = "Post is too short")
     private String content;
