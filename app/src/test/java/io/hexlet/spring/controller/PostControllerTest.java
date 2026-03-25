@@ -1,7 +1,9 @@
 package io.hexlet.spring.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.hexlet.spring.model.User;
 import io.hexlet.spring.repository.PostRepository;
+import io.hexlet.spring.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +26,23 @@ class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
 
-    @BeforeEach
-    void setUp() {
-        postRepository.deleteAll();
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private MockMvc mockMvc;
+
+    private Long testUserId;
+
+    @BeforeEach
+    void setUp() {
+        postRepository.deleteAll();
+        userRepository.deleteAll();
+        var user = new User();
+        user.setEmail("test@example.com");
+        user.setFirstName("Test");
+        testUserId = userRepository.save(user).getId();
+    }
 
     @Test
     void listPublished_returns200_andPage() throws Exception {
@@ -43,13 +55,14 @@ class PostControllerTest {
 
     @Test
     void createPost_returns201_andBody() throws Exception {
-        var body = """
+        var body = String.format("""
         {
         "title": "Test Post",
         "content": "This is a test post content with sufficient length",
-        "published": true
+        "published": true,
+        "userId": %d
         }
-    """;
+    """, testUserId);
 
         mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -64,13 +77,14 @@ class PostControllerTest {
     @Test
     void createMultiplePosts_returns201_andCanRetrieve() throws Exception {
         // Create first post
-        var body1 = """
+        var body1 = String.format("""
     {
     "title": "First Post",
     "content": "This is the first test post content with sufficient length",
-    "published": true
+    "published": true,
+    "userId": %d
     }
-    """;
+    """, testUserId);
 
         mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,13 +92,14 @@ class PostControllerTest {
                 .andExpect(status().isCreated());
 
         // Create second post
-        var body2 = """
+        var body2 = String.format("""
     {
     "title": "Second Post",
     "content": "This is the second test post content with sufficient length",
-    "published": true
+    "published": true,
+    "userId": %d
     }
-    """;
+    """, testUserId);
 
         mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -103,13 +118,14 @@ class PostControllerTest {
     @Test
     void getPostById_returns200_andCorrectPost() throws Exception {
         // First create a post
-        var body = """
+        var body = String.format("""
     {
     "title": "Test Post",
     "content": "This is a test post content with sufficient length",
-    "published": true
+    "published": true,
+    "userId": %d
     }
-    """;
+    """, testUserId);
 
         var result = mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -134,13 +150,14 @@ class PostControllerTest {
     @Test
     void updatePost_returns200_andCorrectsData() throws Exception {
         // First create a post
-        var body1 = """
+        var body1 = String.format("""
     {
     "title": "Original Title",
     "content": "This is the original test post content with sufficient length",
-    "published": false
+    "published": false,
+    "userId": %d
     }
-    """;
+    """, testUserId);
 
         var result = mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -178,13 +195,14 @@ class PostControllerTest {
     @Test
     void deletePost_returns204_whenPostExists() throws Exception {
         // First create a post
-        var body = """
+        var body = String.format("""
     {
     "title": "Post to Delete",
     "content": "This is a test post that will be deleted with sufficient length",
-    "published": true
+    "published": true,
+    "userId": %d
     }
-    """;
+    """, testUserId);
 
         var result = mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -225,13 +243,14 @@ class PostControllerTest {
 
     @Test
     void createPost_returns400_whenTitleIsEmpty() throws Exception {
-        var body = """
+        var body = String.format("""
         {
         "title": "",
         "content": "This is a test post content with sufficient length",
-        "published": true
+        "published": true,
+        "userId": %d
         }
-    """;
+    """, testUserId);
 
         mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -241,13 +260,14 @@ class PostControllerTest {
 
     @Test
     void createPost_returns400_whenContentIsTooShort() throws Exception {
-        var body = """
+        var body = String.format("""
         {
         "title": "Test Post",
         "content": "Short",
-        "published": true
+        "published": true,
+        "userId": %d
         }
-    """;
+    """, testUserId);
 
         mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -258,13 +278,14 @@ class PostControllerTest {
     @Test
     void listPublished_returnsOnlyPublishedPosts() throws Exception {
         // Create a published post
-        var publishedBody = """
+        var publishedBody = String.format("""
     {
     "title": "Published Post",
     "content": "This is a published test post content with sufficient length",
-    "published": true
+    "published": true,
+    "userId": %d
     }
-    """;
+    """, testUserId);
 
         mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -272,13 +293,14 @@ class PostControllerTest {
                 .andExpect(status().isCreated());
 
         // Create an unpublished post
-        var unpublishedBody = """
+        var unpublishedBody = String.format("""
     {
     "title": "Unpublished Post",
     "content": "This is an unpublished test post content with sufficient length",
-    "published": false
+    "published": false,
+    "userId": %d
     }
-    """;
+    """, testUserId);
 
         mockMvc.perform(post("/api/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -293,4 +315,5 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.content[*].title", hasItems("Published Post")))
                 .andExpect(jsonPath("$.content.length()").value(equalTo(1)));
     }
+
 }
