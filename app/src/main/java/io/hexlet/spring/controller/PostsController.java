@@ -3,6 +3,7 @@ package io.hexlet.spring.controller;
 import io.hexlet.spring.dto.PostCreateDTO;
 import io.hexlet.spring.dto.PostDTO;
 import io.hexlet.spring.dto.PostMapper;
+import io.hexlet.spring.dto.PostUpdateDTO;
 import io.hexlet.spring.exception.ResourceNotFoundException;
 import io.hexlet.spring.model.Post;
 import io.hexlet.spring.repository.PostRepository;
@@ -15,8 +16,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -62,13 +65,28 @@ public class PostsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> update(@PathVariable Long id, @RequestBody PostCreateDTO dto) {
+    public ResponseEntity<PostDTO> updatePost(
+            @PathVariable Long id,
+            @Valid @RequestBody PostUpdateDTO dto) {
+
         var post = postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Post with ID " + id + " no found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
+        post.setUpdatedAt(LocalDateTime.now());
+
         postRepository.save(post);
-        return ResponseEntity.ok(postMapper.toDTO(post));
+
+        var response = new PostDTO();
+        response.setId(post.getId());
+        response.setTitle(post.getTitle());
+        response.setContent(post.getContent());
+        response.setPublished(post.isPublished());
+        response.setCreatedAt(post.getCreatedAt());
+        response.setUpdatedAt(post.getUpdatedAt());
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
