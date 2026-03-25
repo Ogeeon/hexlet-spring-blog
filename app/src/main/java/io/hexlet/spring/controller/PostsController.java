@@ -63,11 +63,11 @@ public class PostsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> update(@PathVariable Long id, @RequestBody Post data) {
+    public ResponseEntity<PostDTO> update(@PathVariable Long id, @RequestBody CreatePostDTO dto) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post with ID " + id + " no found"));
-        post.setTitle(data.getTitle());
-        post.setContent(data.getContent());
+        post.setTitle(dto.getTitle());
+        post.setContent(dto.getContent());
         postRepository.save(post);
         return ResponseEntity.ok(postMapper.toDTO(post));
     }
