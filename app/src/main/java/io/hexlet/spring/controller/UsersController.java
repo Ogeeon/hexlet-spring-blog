@@ -1,7 +1,9 @@
 package io.hexlet.spring.controller;
 
+import io.hexlet.spring.dto.UserCreateDTO;
 import io.hexlet.spring.dto.UserDTO;
-import io.hexlet.spring.dto.UserMapper;
+import io.hexlet.spring.dto.UserUpdateDTO;
+import io.hexlet.spring.mapper.UserMapper;
 import io.hexlet.spring.exception.ResourceNotFoundException;
 import io.hexlet.spring.model.User;
 import io.hexlet.spring.repository.UserRepository;
@@ -26,7 +28,7 @@ public class UsersController {
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> index(@RequestParam(defaultValue = "10") Integer limit) {
-        var users = userRepository.findAll().stream().limit(limit).map(userMapper::toDTO).toList();
+        var users = userRepository.findAll().stream().limit(limit).map(userMapper::map).toList();
         return ResponseEntity.ok(users);
     }
 
@@ -34,29 +36,25 @@ public class UsersController {
     @ResponseStatus(HttpStatus.OK)
     public UserDTO show(@PathVariable Long id) {
         return userRepository.findById(id)
-                .map(userMapper::toDTO)
+                .map(userMapper::map)
                 .orElseThrow(() -> new ResourceNotFoundException("User with ID " + id + " not found"));
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@Valid @RequestBody UserDTO dto) {
-        User user = new User();
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setEmail(dto.getEmail());
-        User saved = userRepository.save(user);
-        return ResponseEntity.created(URI.create("/users/" + user.getId()))
-                .body(userMapper.toDTO(saved));
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Object> create(@Valid @RequestBody UserCreateDTO dto) {
+        var saved = userRepository.save(userMapper.map(dto));
+        return ResponseEntity.created(URI.create("/users/" + saved.getId()))
+                .body(userMapper.map(saved));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody UserDTO dto) {
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
         var user = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User with ID " + id + " not found"));
-        user.setFirstName(dto.getFirstName());
-        user.setEmail(dto.getEmail());
+        userMapper.update(dto, user);
         userRepository.save(user);
-        return ResponseEntity.ok(userMapper.toDTO(user));
+        return ResponseEntity.ok(userMapper.map(user));
     }
 
     @DeleteMapping("/{id}")

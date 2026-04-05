@@ -25,6 +25,7 @@ public class Post {
     @NotBlank(message = "Post title is required")
     private String title;
     @Size(min = 10, message = "Post is too short")
+    @Column(columnDefinition = "TEXT")
     private String content;
     private boolean published;
     @ManyToOne

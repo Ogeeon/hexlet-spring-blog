@@ -4,6 +4,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.3"
     jacoco
     id("org.sonarqube") version "5.1.0.4882"
+    kotlin("kapt") version "1.9.25"
 }
 
 group = "io.hexlet"
@@ -20,12 +21,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("net.datafaker:datafaker:1.9.0")
+    implementation("org.mapstruct:mapstruct:1.5.5.Final")
+
     compileOnly("org.projectlombok:lombok:1.18.42")
+
     annotationProcessor("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+
     runtimeOnly("com.h2database:h2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.h2database:h2")
+
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 }
 
 sonar {
