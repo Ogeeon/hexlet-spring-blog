@@ -133,6 +133,7 @@ class UserControllerTest {
         var body2 = """
         {
         "firstName": "Johnathan",
+        "lastName": "Dowson",
         "email": "johnd@example.com"
         }
         """;

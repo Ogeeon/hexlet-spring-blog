@@ -23,12 +23,10 @@ import java.net.URI;
 @RequestMapping("/api/posts")
 public class PostsController {
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final PostMapper postMapper;
 
-    public PostsController(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper) {
+    public PostsController(PostRepository postRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
-        this.userRepository = userRepository;
         this.postMapper = postMapper;
     }
 

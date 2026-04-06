@@ -49,7 +49,7 @@ public class UsersController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
+    public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
         var user = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User with ID " + id + " not found"));
         userMapper.update(dto, user);

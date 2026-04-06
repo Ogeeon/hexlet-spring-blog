@@ -1,7 +1,9 @@
 package io.hexlet.spring.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,10 +24,17 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank(message = "User email is required")
+    @Email
     private String email;
+
     @NotBlank(message = "User first name is required")
+    @Size(min = 2, max = 50)
     private String firstName;
+
+    @NotBlank(message = "User last name is required")
+    @Size(min = 2, max = 50)
     private String lastName;
     private LocalDate birthday;
 

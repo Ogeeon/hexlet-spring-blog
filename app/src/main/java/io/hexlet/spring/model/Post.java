@@ -23,6 +23,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message = "Post title is required")
+    @Size(min = 5, max = 100)
     private String title;
     @Size(min = 10, message = "Post is too short")
     @Column(columnDefinition = "TEXT")

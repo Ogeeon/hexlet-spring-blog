@@ -41,6 +41,7 @@ class PostControllerTest {
         var user = new User();
         user.setEmail("test@example.com");
         user.setFirstName("Test");
+        user.setLastName("Definitely-Valid");
         testUserId = userRepository.save(user).getId();
     }
 
