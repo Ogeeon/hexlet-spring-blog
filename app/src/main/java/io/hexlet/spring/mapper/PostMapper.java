@@ -12,6 +12,7 @@ import io.hexlet.spring.dto.PostDTO;
 import io.hexlet.spring.model.Post;
 
 @Mapper(
+        uses = { JsonNullableMapper.class },
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE

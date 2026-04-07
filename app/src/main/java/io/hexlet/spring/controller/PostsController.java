@@ -2,6 +2,7 @@ package io.hexlet.spring.controller;
 
 import io.hexlet.spring.dto.PostCreateDTO;
 import io.hexlet.spring.dto.PostDTO;
+import io.hexlet.spring.dto.PostPatchDTO;
 import io.hexlet.spring.mapper.PostMapper;
 import io.hexlet.spring.dto.PostUpdateDTO;
 import io.hexlet.spring.exception.ResourceNotFoundException;
@@ -66,6 +67,20 @@ public class PostsController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         postMapper.update(dto, post);
+        postRepository.save(post);
+        return ResponseEntity.ok(postMapper.map(post));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<PostDTO> patchPost(@PathVariable Long id,
+                                             @RequestBody PostPatchDTO dto) {
+        var post = postRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        dto.getTitle().ifPresent(post::setTitle);
+        dto.getContent().ifPresent(post::setContent);
+        dto.getPublished().ifPresent(post::setPublished);
+
         postRepository.save(post);
         return ResponseEntity.ok(postMapper.map(post));
     }

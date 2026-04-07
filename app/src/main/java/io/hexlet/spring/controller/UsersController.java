@@ -2,6 +2,7 @@ package io.hexlet.spring.controller;
 
 import io.hexlet.spring.dto.UserCreateDTO;
 import io.hexlet.spring.dto.UserDTO;
+import io.hexlet.spring.dto.UserPatchDTO;
 import io.hexlet.spring.dto.UserUpdateDTO;
 import io.hexlet.spring.mapper.UserMapper;
 import io.hexlet.spring.exception.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.List;
@@ -53,6 +55,20 @@ public class UsersController {
         var user = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User with ID " + id + " not found"));
         userMapper.update(dto, user);
+        userRepository.save(user);
+        return ResponseEntity.ok(userMapper.map(user));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserDTO> patchUser(@PathVariable Long id,
+                                             @RequestBody UserPatchDTO dto) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        dto.getFirstName().ifPresent(user::setFirstName);
+        dto.getLastName().ifPresent(user::setLastName);
+        dto.getEmail().ifPresent(user::setEmail);
+
         userRepository.save(user);
         return ResponseEntity.ok(userMapper.map(user));
     }

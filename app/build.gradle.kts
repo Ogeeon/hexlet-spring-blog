@@ -22,6 +22,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("net.datafaker:datafaker:1.9.0")
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
+    implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
     compileOnly("org.projectlombok:lombok:1.18.42")
 
