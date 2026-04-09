@@ -62,7 +62,7 @@ public class PostsController {
 
         var post = postMapper.map(dto);
         post.setUser(user);
-        post.setTags(getTagsByIDs(dto.getTags()));
+        dto.getTags().ifPresent(l -> post.setTags(getTagsByIDs(l)));
         postRepository.save(post);
 
         var postDTO = postMapper.map(post);
@@ -78,7 +78,7 @@ public class PostsController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         postMapper.update(dto, post);
-        post.setTags(getTagsByIDs(dto.getTags()));
+        dto.getTags().ifPresent(l -> post.setTags(getTagsByIDs(l)));
         postRepository.save(post);
         return ResponseEntity.ok(postMapper.map(post));
     }

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.util.List;
 
@@ -23,5 +24,5 @@ public class PostUpdateDTO {
 
     @Getter
     @Setter
-    private List<Long> tags;
+    private JsonNullable<List<Long>> tags = JsonNullable.undefined();
 }
