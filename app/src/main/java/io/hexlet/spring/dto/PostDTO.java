@@ -1,9 +1,13 @@
 package io.hexlet.spring.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import io.hexlet.spring.model.Tag;
 
 @NoArgsConstructor
 @Setter
@@ -16,4 +20,5 @@ public class PostDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long userId;
+    private List<TagDTO> tags;
 }

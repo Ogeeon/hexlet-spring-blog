@@ -13,6 +13,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Setter
@@ -20,7 +22,7 @@ import java.time.LocalDateTime;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "users")
-public class User {
+public class User implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,7 +38,11 @@ public class User {
     @NotBlank(message = "User last name is required")
     @Size(min = 2, max = 50)
     private String lastName;
+
     private LocalDate birthday;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

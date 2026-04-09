@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 public class PostUpdateDTO {
 
     @Getter
@@ -19,4 +21,7 @@ public class PostUpdateDTO {
     @Size(min = 10)
     private String content;
 
+    @Getter
+    @Setter
+    private List<Long> tags;
 }
