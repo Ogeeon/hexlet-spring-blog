@@ -6,11 +6,10 @@ import io.hexlet.spring.dto.PostPatchDTO;
 import io.hexlet.spring.mapper.PostMapper;
 import io.hexlet.spring.dto.PostUpdateDTO;
 import io.hexlet.spring.exception.ResourceNotFoundException;
-import io.hexlet.spring.model.Tag;
 import io.hexlet.spring.repository.PostRepository;
-import io.hexlet.spring.repository.TagRepository;
 import io.hexlet.spring.repository.UserRepository;
 import jakarta.validation.Valid;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +28,11 @@ public class PostsController {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostMapper postMapper;
-    private final TagRepository tagRepository;
 
-    public PostsController(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper, TagRepository tagRepository) {
+    public PostsController(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postMapper = postMapper;
-        this.tagRepository = tagRepository;
     }
 
     @GetMapping("")
@@ -62,7 +59,6 @@ public class PostsController {
 
         var post = postMapper.map(dto);
         post.setUser(user);
-        dto.getTags().ifPresent(l -> post.setTags(getTagsByIDs(l)));
         postRepository.save(post);
 
         var postDTO = postMapper.map(post);
@@ -78,7 +74,6 @@ public class PostsController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         postMapper.update(dto, post);
-        dto.getTags().ifPresent(l -> post.setTags(getTagsByIDs(l)));
         postRepository.save(post);
         return ResponseEntity.ok(postMapper.map(post));
     }
@@ -92,9 +87,10 @@ public class PostsController {
         dto.getTitle().ifPresent(post::setTitle);
         dto.getContent().ifPresent(post::setContent);
         dto.getPublished().ifPresent(post::setPublished);
-        dto.getTags().ifPresent(l -> post.setTags(getTagsByIDs(l)));
+        dto.getTags().ifPresent(tagIds -> post.setTags(postMapper.mapTags(JsonNullable.of(tagIds))));
 
         postRepository.save(post);
+//        return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(postMapper.map(post));
     }
 
@@ -105,7 +101,4 @@ public class PostsController {
         return ResponseEntity.noContent().build();
     }
 
-    private List<Tag> getTagsByIDs(List<Long> ids) {
-        return tagRepository.findAllById(ids);
-    }
 }
