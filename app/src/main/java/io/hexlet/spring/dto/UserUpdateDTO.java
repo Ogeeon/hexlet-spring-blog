@@ -19,4 +19,9 @@ public class UserUpdateDTO {
     @Setter
     @NotBlank(message = "User last name is required")
     private String lastName;
+
+    @Getter
+    @Setter
+    @NotBlank(message = "Password is required")
+    private String password;
 }

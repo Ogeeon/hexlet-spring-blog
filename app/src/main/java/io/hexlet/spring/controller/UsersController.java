@@ -6,7 +6,6 @@ import io.hexlet.spring.dto.UserPatchDTO;
 import io.hexlet.spring.dto.UserUpdateDTO;
 import io.hexlet.spring.mapper.UserMapper;
 import io.hexlet.spring.exception.ResourceNotFoundException;
-import io.hexlet.spring.model.User;
 import io.hexlet.spring.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -65,10 +64,7 @@ public class UsersController {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        dto.getFirstName().ifPresent(user::setFirstName);
-        dto.getLastName().ifPresent(user::setLastName);
-        dto.getEmail().ifPresent(user::setEmail);
-
+        userMapper.patch(dto, user);
         userRepository.save(user);
         return ResponseEntity.ok(userMapper.map(user));
     }

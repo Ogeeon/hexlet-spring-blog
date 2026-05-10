@@ -20,6 +20,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+
     implementation("net.datafaker:datafaker:1.9.0")
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
@@ -33,6 +36,7 @@ dependencies {
     runtimeOnly("com.h2database:h2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("com.h2database:h2")
 
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
@@ -41,8 +45,8 @@ dependencies {
 sonar {
     properties {
         property("sonar.projectKey", "Ogeeon_hexlet-spring-blog")
-        property("sonar.organization", "ogeeon") // для SonarCloud
-        property("sonar.host.url", "https://sonarcloud.io") // или ваш SonarQube
+        property("sonar.organization", "ogeeon")
+        property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.java.coveragePlugin", "jacoco")
         property("sonar.junit.reportPaths", "build/test-results/test")
         property("sonar.jacoco.reportPaths", "build/jacoco/test.exec")

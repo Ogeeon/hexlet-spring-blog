@@ -8,6 +8,7 @@ import io.hexlet.spring.repository.TagRepository;
 import io.hexlet.spring.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import net.datafaker.Faker;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,15 +19,18 @@ import java.util.List;
 public class ModelGenerator {
 
     private final Faker faker;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
 
     public ModelGenerator(Faker faker,
+                          PasswordEncoder passwordEncoder,
                           UserRepository userRepository,
                           PostRepository postRepository,
                           TagRepository tagRepository) {
         this.faker = faker;
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
@@ -47,6 +51,7 @@ public class ModelGenerator {
             user.setFirstName(faker.name().firstName());
             user.setLastName(faker.name().lastName());
             user.setEmail(faker.internet().emailAddress());
+            user.setPasswordDigest(passwordEncoder.encode("password"));
             userRepository.save(user);
 
             var post = new Post();
@@ -60,5 +65,11 @@ public class ModelGenerator {
             postRepository.save(post);
 
         }
+        var user = new User();
+        user.setFirstName("Admin");
+        user.setLastName("Omnipotent");
+        user.setEmail("admin@blog.com");
+        user.setPasswordDigest(passwordEncoder.encode("password"));
+        userRepository.save(user);
     }
 }

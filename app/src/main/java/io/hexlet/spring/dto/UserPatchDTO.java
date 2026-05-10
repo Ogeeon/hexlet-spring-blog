@@ -10,4 +10,5 @@ public class UserPatchDTO {
     private JsonNullable<String> firstName = JsonNullable.undefined();
     private JsonNullable<String> lastName = JsonNullable.undefined();
     private JsonNullable<String> email = JsonNullable.undefined();
+    private JsonNullable<String> password = JsonNullable.undefined();
 }
