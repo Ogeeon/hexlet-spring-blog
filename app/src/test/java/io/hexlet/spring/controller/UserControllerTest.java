@@ -1,11 +1,15 @@
 package io.hexlet.spring.controller;
 
+import io.hexlet.spring.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasItems;
@@ -16,10 +20,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser
 class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+    }
 
     @Test
     void createUser_returns201_andBody() throws Exception {
@@ -27,7 +40,8 @@ class UserControllerTest {
             {
             "firstName": "John",
             "lastName": "Doe",
-            "email": "john@example.com"
+            "email": "john@example.com",
+            "password": "password"
             }
         """;
 
@@ -46,7 +60,8 @@ class UserControllerTest {
         {
         "firstName": "John",
         "lastName": "Doe",
-        "email": "john@example.com"
+        "email": "john@example.com",
+        "password": "password"
         }
         """;
 
@@ -60,7 +75,8 @@ class UserControllerTest {
         {
         "firstName": "Jane",
         "lastName": "Smith",
-        "email": "jane@example.com"
+        "email": "jane@example.com",
+        "password": "password"
         }
         """;
 
@@ -85,7 +101,8 @@ class UserControllerTest {
         {
         "firstName": "John",
         "lastName": "Doe",
-        "email": "john@example.com"
+        "email": "john@example.com",
+        "password": "password"
         }
         """;
 
@@ -116,7 +133,8 @@ class UserControllerTest {
         {
         "firstName": "John",
         "lastName": "Dowson",
-        "email": "johnd@example.com"
+        "email": "johnd@example.com",
+        "password": "password"
         }
         """;
 
@@ -134,7 +152,8 @@ class UserControllerTest {
         {
         "firstName": "Johnathan",
         "lastName": "Dowson",
-        "email": "johnd@example.com"
+        "email": "johnd@example.com",
+        "password": "password"
         }
         """;
 
@@ -160,7 +179,8 @@ class UserControllerTest {
         {
         "firstName": "John",
         "lastName": "Doe",
-        "email": "john@example.com"
+        "email": "john@example.com",
+        "password": "password"
         }
         """;
 

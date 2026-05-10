@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.security.test.context.support.WithMockUser;
+
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser
 class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
@@ -42,6 +45,7 @@ class PostControllerTest {
         user.setEmail("test@example.com");
         user.setFirstName("Test");
         user.setLastName("Definitely-Valid");
+        user.setPasswordDigest("password");
         testUserId = userRepository.save(user).getId();
     }
 
