@@ -8,6 +8,7 @@ import io.hexlet.spring.repository.TagRepository;
 import io.hexlet.spring.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import net.datafaker.Faker;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Profile("test")
 @Component
 public class ModelGenerator {
 
