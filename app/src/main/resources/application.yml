@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: development
   datasource:
     driver-class-name: org.h2.Driver   # общий драйвер (будет переопределен для prod)
   jpa:
