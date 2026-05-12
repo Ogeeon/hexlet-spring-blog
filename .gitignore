@@ -3,3 +3,5 @@
 build
 app/build
 /.claude/settings.local.json
+/app/data/devdb.lock.db
+/app/data/devdb.mv.db

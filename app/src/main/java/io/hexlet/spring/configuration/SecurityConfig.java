@@ -38,6 +38,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/about.html").permitAll()
                         .requestMatchers("/api/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts", "/api/posts/**", "/api/tags", "/api/tags/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
